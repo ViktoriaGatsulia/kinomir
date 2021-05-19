@@ -102,18 +102,44 @@ public class App {
         System.out.println("Введите дату возврата:");
         String date_return = scanner.nextLine();
         String fio = "";
+        String address = "";
         List<Person> p = ScriptPerson.personByFio(stmt, personFio);
         if (p != null) {
             if (!p.isEmpty()) {
                 fio = p.get(0).getFio();
+                fio = p.get(0).getAddress();
             } else {
                 fio = personFio;
             }
         }
-
-        try (FileWriter writer = new FileWriter("letter" + Math.random() + ".txt", false)) {
-            String text1 = "";
-            String text = "Уважаемый";
+        String[] fio_full = fio.split(" ");
+        String l_name = "";
+        String f_name = "";
+        String m_name = "";
+        if (fio_full.length >= 3) {
+            l_name = fio_full[0];
+            f_name = fio_full[1];
+            m_name = fio_full[2];
+        }
+        String film_title = "";
+        String date_deb = "";
+        List<Debtor> d = ScriptDebtor.selectDebtorForFio(stmt, fio);
+        if (d != null) {
+            if (!d.isEmpty()) {
+                d.get(0).getFilm().getTitle();
+                d.get(0).getDate_deb();
+            }
+        }
+        try (FileWriter writer = new FileWriter("letter_1_" + Math.random() + ".txt", false)) {
+            String text = l_name + " " + f_name.substring(0, 1) + ". " + m_name.substring(0, 1) + ".\n" ;
+            text += address + "\n";
+            text += "Уважаемый " + f_name + " " + m_name + "!\n";
+            text += "Убедительно прошу Вас вернуть фильм «" + film_title + "»,\n";
+            text += "который Вы взяли " + date_deb + " до " + date_return + ".\n";
+            text += "\t\t\t\t\t\tЗаранее спасибо\n";
+            text += "\t\t\t\t\t\t\t\tПодпись\n";
+            text += "\t\t\t\t\t\t\t\tДата\n";
+            System.out.println(text);
             writer.write(text);
             writer.append('\n');
             writer.append('E');
